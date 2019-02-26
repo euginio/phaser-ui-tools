@@ -56,7 +56,13 @@ function create() {
         {'duration': 300, 'ease': Phaser.Math.Easing.Quadratic.Out}
     );
 
-    Phaser.Display.Align.To.BottomCenter(scrollbar, viewport, 0, 128 + 10);
+    //viewport.realHeight = 1280
+
+    //var row2 = new uiWidgets.Row(this, 0, 0)
+    //row2.addNode(viewport)
+    //row2.addNode(scrollbar)
+
+    Phaser.Display.Align.To.BottomCenter(scrollbar, viewport, 0, viewport.realHeight + 10);
 
 }
 

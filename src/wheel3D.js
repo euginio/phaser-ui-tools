@@ -313,6 +313,8 @@ export class Wheel3D {
 
     /** Called after movement is finished. */
     dispatchOnComplete() {
+        this.enableMoving();
+
         if (this.direction === 0) {
             this.emitter.emit('backComplete', this);
         } else if (this.direction === 1) {

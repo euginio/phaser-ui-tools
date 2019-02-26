@@ -7,6 +7,8 @@ if (Phaser.Sprite === undefined) {
 
             game.add.existing(this);
 
+            this.setInteractive();
+
             // Map alignment constants to Phaser 3 Align functions
             const alignIn = Phaser.Display.Align.In;
             this.alignInMapping = {

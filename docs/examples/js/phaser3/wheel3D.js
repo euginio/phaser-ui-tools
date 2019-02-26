@@ -28,7 +28,7 @@ function create() {
     var menuListY = [];
 
     for (var i = 0; i < 12; i++) {
-        var icon = this.add.sprite(0, 0, 'icon');
+        var icon = this.add.sprite(222, 222 + i, 'icon');
         menuListY.push(icon);
     }
 
@@ -54,6 +54,10 @@ function create() {
     );
 
     menuWheelY.activate();
+
+    for (var i = 0; i < 12; i++) {
+        this.add.existing(menuWheelY.group.list[i])
+    }
 
     // Scroll Buttons
     var scrollLeftButtonY = new uiWidgets.Button(
