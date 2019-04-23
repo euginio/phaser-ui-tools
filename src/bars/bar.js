@@ -1,7 +1,9 @@
+import { PhaserObjects } from '../phaser_objects';
+
 /** Base object for all Bar-like Widgets.
  * @extends Phaser.Group
  */
-export class Bar extends Phaser.Group {
+export class Bar extends PhaserObjects.Group {
     /**
      * @param {number} x - The Bar's x position.
      * @param {number} y - The Bar's y position.

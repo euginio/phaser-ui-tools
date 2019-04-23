@@ -1,9 +1,11 @@
 import { alignments } from '../const';
 
+import { PhaserObjects } from '../phaser_objects';
+
 /** Group with a dedicated background image.
  * @extends Phaser.Group
  */
-export class Frame extends Phaser.Group {
+export class Frame extends PhaserObjects.Group {
     /**
      * @param {Object} game - Current game instance.
      * @param {Number} x - The x position of the Frame.
@@ -22,7 +24,7 @@ export class Frame extends Phaser.Group {
 
         // Add background to Frame.
         if (bg !== null) {
-            const bgSprite = game.add.sprite(0, 0, bg);
+            const bgSprite = new PhaserObjects.Sprite(game, 0, 0, bg);
             bgSprite.sendToBack();
             bgSprite.alignIn(this, alignments.TOP_LEFT);
         }
@@ -38,10 +40,11 @@ export class Frame extends Phaser.Group {
         const align = alignment || this.alignment;
 
         this.add(node);
-        const previousNode = this.children[this.children.length - 2];
+        const nodes = this.getNodes();
+        const previousNode = nodes[nodes.length - 2];
 
         if (previousNode !== undefined) {
-            node.alignTo(previousNode, align, paddingX, paddingY);
+            this.alignChildren(node, previousNode, align, paddingX, paddingY);
         }
 
         // Reset the positions for the bar's draggable area.

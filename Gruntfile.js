@@ -58,13 +58,10 @@ module.exports = function (grunt) {
                         multiEntry()
                     ];
                 },
-                moduleName: "uiWidgets",
+                name: "uiWidgets",
                 format: 'umd',
             },
-            files: {
-              dest: "dist/phaser-ui-tools.js",
-              src: "src/**/*.js"
-            },
+            "dist/phaser-ui-tools.js": ["src/phaserObjects.js", "src/const.js", "src/**/*.js"]
           }
     });
 

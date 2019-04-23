@@ -1,7 +1,9 @@
+import { PhaserObjects } from './phaser_objects';
+
 /** Sprite with text added as a child.
  * @extends Phaser.Sprite
  */
-export class textSprite extends Phaser.Sprite {
+export class textSprite extends PhaserObjects.Sprite {
     /**
      * @param {Object} game - Current game instance.
      * @param {string} image - The image to create a sprite with.
@@ -24,7 +26,7 @@ export class textSprite extends Phaser.Sprite {
 /** Phaser Button with text added as a child.
  * @extends Phaser.Button
  */
-export class textButton extends Phaser.Button {
+export class textButton extends PhaserObjects.Button {
     /**
      * @param {Object} game - Current game instance.
      * @param {string} image - The image to create a sprite with.
