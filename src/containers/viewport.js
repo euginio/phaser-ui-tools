@@ -29,15 +29,31 @@ export class Viewport extends PhaserObjects.Group {
         };
 
         // Adding the mask attribute to a group hides objects outside the mask.
-        this.mask = this.game.add.graphics(this.area.x, this.area.y);
-        this.mask.beginFill(0x0000ff);
-        this.mask.drawRect(0, 0, width, height);
-        this.mask.endFill();
+        const mask = new PhaserObjects.ViewportMask(game, x, y);
+        mask.create(width, height);
+
+        // Phaser 2/3 compatibility
+        try {
+            // 3
+            this.mask = new Phaser.Display.Masks.GeometryMask(this, mask);
+        } catch (err) {
+            // 2
+            this.mask = mask;
+        }
     }
 
     /** Adds a new object into the Viewport. */
     addNode(node) {
-        this.add(node);
+        // Phaser 2/3 compatibility
+        node.x = this.x; // eslint-disable-line
+        node.y = this.y; // eslint-disable-line
+        try {
+            // 2
+            this.add(node);
+        } catch (err) {
+            // 3
+            this.children.set(node);
+        }
     }
 
     /** Disable input for all objets outside the viewport's visible area.

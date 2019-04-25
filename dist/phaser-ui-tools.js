@@ -93,17 +93,18 @@
     var ExportedObjects = {};
     var Group;
     var Sprite;
-    var Button; // Phaser version specific base Group
+    var Button;
+    var Graphics;
+    var Easing; // Phaser version specific base Group
 
     var _Phaser = Phaser;
     Group = _Phaser.Group;
 
     if (Group === undefined) {
-      Group = Phaser.GameObjects.Group;
+      Group = Phaser.GameObjects.Container; // Phaser 3
 
-      // Phaser 3
       Group.prototype.getNodes = function getNodes() {
-        return this.children.entries;
+        return this.getAll();
       };
 
       Group.prototype.alignChildren = function alignChildren(child, other, align, paddingX, paddingY) {
@@ -160,9 +161,87 @@
       Button = Sprite;
     }
 
+    var _Phaser4 = Phaser;
+    Graphics = _Phaser4.Graphics;
+
+    if (Graphics === undefined) {
+      Graphics = Phaser.GameObjects.Graphics;
+
+      // Phaser 3
+      var ViewportMask =
+      /*#__PURE__*/
+      function (_Graphics) {
+        _inherits(ViewportMask, _Graphics);
+
+        function ViewportMask(game, x, y) {
+          var _this;
+
+          _classCallCheck(this, ViewportMask);
+
+          _this = _possibleConstructorReturn(this, _getPrototypeOf(ViewportMask).call(this, game, {
+            x: x,
+            y: y
+          }));
+          _this.x = x;
+          _this.y = y;
+          return _this;
+        }
+
+        _createClass(ViewportMask, [{
+          key: "create",
+          value: function create(width, height) {
+            this.fillStyle(0x800000, 1).fillRect(this.x, this.y, width, height);
+          }
+        }]);
+
+        return ViewportMask;
+      }(Graphics);
+
+      ExportedObjects.ViewportMask = ViewportMask;
+    } else {
+      // Phaser 2
+      var _ViewportMask =
+      /*#__PURE__*/
+      function (_Graphics2) {
+        _inherits(_ViewportMask, _Graphics2);
+
+        function _ViewportMask(game, x, y) {
+          var _this2;
+
+          _classCallCheck(this, _ViewportMask);
+
+          _this2 = _possibleConstructorReturn(this, _getPrototypeOf(_ViewportMask).call(this, game, x, y));
+          _this2.x = x;
+          _this2.y = y;
+          return _this2;
+        }
+
+        _createClass(_ViewportMask, [{
+          key: "create",
+          value: function create(width, height) {
+            this.beginFill(0x0000ff);
+            this.drawRect(this.x, this.y, width, height);
+            this.endFill();
+          }
+        }]);
+
+        return _ViewportMask;
+      }(Graphics);
+
+      ExportedObjects.ViewportMask = _ViewportMask;
+    }
+
+    var _Phaser5 = Phaser;
+    Easing = _Phaser5.Easing;
+
+    if (Easing === undefined) {
+      Easing = Phaser.Math.Easing;
+    }
+
     ExportedObjects.Group = Group;
     ExportedObjects.Sprite = Sprite;
     ExportedObjects.Button = Button;
+    ExportedObjects.Easing = Easing;
     var PhaserObjects = ExportedObjects;
 
     /** Base object for all Bar-like Widgets.
@@ -904,7 +983,7 @@
         _this.minBarSize = 44;
         _this.tweenParams = tweenParams || {
           duration: 300,
-          ease: Phaser.Easing.Quadratic.Out
+          ease: PhaserObjects.Easing.Quadratic.Out
         }; // Flag switched on when the track is clicked, switched off after the bar movement is finished.
 
         _this.trackClicked = false;
@@ -1559,13 +1638,16 @@
           height: height
         }; // Adding the mask attribute to a group hides objects outside the mask.
 
-        _this.mask = _this.game.add.graphics(_this.area.x, _this.area.y);
+        var mask = new PhaserObjects.ViewportMask(game, x, y);
+        mask.create(width, height); // Phaser 2/3 compatibility
 
-        _this.mask.beginFill(0x0000ff);
-
-        _this.mask.drawRect(0, 0, width, height);
-
-        _this.mask.endFill();
+        try {
+          // 3
+          _this.mask = new Phaser.Display.Masks.GeometryMask(_assertThisInitialized(_this), mask);
+        } catch (err) {
+          // 2
+          _this.mask = mask;
+        }
 
         return _this;
       }
@@ -1575,7 +1657,18 @@
       _createClass(Viewport, [{
         key: "addNode",
         value: function addNode(node) {
-          this.add(node);
+          // Phaser 2/3 compatibility
+          node.x = this.x; // eslint-disable-line
+
+          node.y = this.y; // eslint-disable-line
+
+          try {
+            // 2
+            this.add(node);
+          } catch (err) {
+            // 3
+            this.children.set(node);
+          }
         }
         /** Disable input for all objets outside the viewport's visible area.
          * Recursively checks all the object's children.

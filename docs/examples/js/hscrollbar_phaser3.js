@@ -18,9 +18,9 @@ function preload() {
 }
 
 function create() {
-    //var viewport = new uiWidgets.Viewport(this, 75, 75, 260, 128);
+    var viewport = new uiWidgets.Viewport(this, 75, 75, 260, 128);
     var row = new uiWidgets.Row(this);
-    //viewport.addNode(row);
+    viewport.addNode(row);
 
     // Add things to the row.
     var dummy_sprite_a = this.add.image(0, 0, "dummyButton");
@@ -43,15 +43,15 @@ function create() {
     row.addNode(dummy_sprite_h);
     row.addNode(dummy_sprite_i);
 
-    //var scrollbar = new uiWidgets.Scrollbar(
-    //    this,
-    //    viewport,
-    //    true,
-    //    false,
-    //    "track",
-    //    "bar",
+    var scrollbar = new uiWidgets.Scrollbar(
+        this,
+        viewport,
+        true,
+        false,
+        "track",
+        "bar",
       //  {'duration': 300, 'ease': Phaser.Easing.Quadratic.Out}
-    //);
+    );
 
     //scrollbar.alignTo(viewport, 10, 0, 10);
 

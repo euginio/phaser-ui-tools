@@ -3,15 +3,17 @@ const ExportedObjects = {};
 let Group;
 let Sprite;
 let Button;
+let Graphics;
+let Easing;
 
 // Phaser version specific base Group
 ({ Group } = Phaser);
 if (Group === undefined) {
-    ({ Group } = Phaser.GameObjects);
+    Group = Phaser.GameObjects.Container;
 
     // Phaser 3
     Group.prototype.getNodes = function getNodes() {
-        return this.children.entries;
+        return this.getAll();
     };
 
     Group.prototype.alignChildren = function alignChildren(child, other, align, paddingX, paddingY) {
@@ -63,8 +65,50 @@ if (Button === undefined) {
     Button = Sprite;
 }
 
+
+({ Graphics } = Phaser);
+if (Graphics === undefined) {
+    ({ Graphics } = Phaser.GameObjects);
+
+    // Phaser 3
+    class ViewportMask extends Graphics {
+        constructor(game, x, y) {
+            super(game, { x, y });
+            this.x = x;
+            this.y = y;
+        }
+
+        create(width, height) {
+            this.fillStyle(0x800000, 1).fillRect(this.x, this.y, width, height);
+        }
+    }
+    ExportedObjects.ViewportMask = ViewportMask;
+} else {
+    // Phaser 2
+    class ViewportMask extends Graphics {
+        constructor(game, x, y) {
+            super(game, x, y);
+            this.x = x;
+            this.y = y;
+        }
+
+        create(width, height) {
+            this.beginFill(0x0000ff);
+            this.drawRect(this.x, this.y, width, height);
+            this.endFill();
+        }
+    }
+    ExportedObjects.ViewportMask = ViewportMask;
+}
+
+({ Easing } = Phaser);
+if (Easing === undefined) {
+    ({ Easing } = Phaser.Math);
+}
+
 ExportedObjects.Group = Group;
 ExportedObjects.Sprite = Sprite;
 ExportedObjects.Button = Button;
+ExportedObjects.Easing = Easing;
 
 export const PhaserObjects = ExportedObjects;
